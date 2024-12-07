@@ -1,0 +1,37 @@
+const { Category } = require("../model/category.model");
+
+exports.store = async (req, res, next) => {
+    try {
+        const { category_name } = req.body;
+        await Category.create({ category_name })
+            .then((category) => {
+                res.json({
+                    success: true,
+                    message: "category Created",
+                    id: category._id
+                })
+            })
+            .catch((error) => {
+                res.json(error)
+            })
+    } catch (error) {
+        res.json(error)
+    }
+}
+
+exports.index = async (_, res, next) => {
+    try {
+        await Category.find()
+            .then((category) => {
+                res.json({
+                    success: true,
+                    category
+                })
+            })
+            .catch((error) => {
+                res.json(error)
+            })
+    } catch (error) {
+        res.json(error)
+    }
+}
