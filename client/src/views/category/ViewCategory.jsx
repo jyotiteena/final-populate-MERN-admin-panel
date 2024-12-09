@@ -1,5 +1,20 @@
-import {CCard,CCardBody,CCardHeader,CCol,CTable,CTableBody,CTableDataCell,CTableHead,CTableHeaderCell,CTableRow,} from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCol, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow, } from '@coreui/react'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { viewCategory } from '../../Redux/categorySlice'
+import MomentDate from '../../utils/MomentDate'
+import { fetchData } from '../../Redux/commonSlice'
 const ViewCategory = () => {
+  const dispatch = useDispatch()
+
+
+  useEffect(() => {
+    // dispatch(viewCategory())
+    dispatch(fetchData({ model: 'category', method: 'GET' }));
+  }, [dispatch])
+  const categoryList = useSelector((state) => state?.common?.apiData?.category)
+  console.log("categoryList");
+  console.log(categoryList)
   return (
     <>
       <CCol xs={12}>
@@ -8,35 +23,31 @@ const ViewCategory = () => {
             <strong>View Category</strong>
           </CCardHeader>
           <CCardBody>
-              <CTable>
-                <CTableHead>
-                  <CTableRow>
-                    <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Class</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Heading</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Heading</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">1</CTableHeaderCell>
-                    <CTableDataCell>Mark</CTableDataCell>
-                    <CTableDataCell>Otto</CTableDataCell>
-                    <CTableDataCell>@mdo</CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">2</CTableHeaderCell>
-                    <CTableDataCell>Jacob</CTableDataCell>
-                    <CTableDataCell>Thornton</CTableDataCell>
-                    <CTableDataCell>@fat</CTableDataCell>
-                  </CTableRow>
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">3</CTableHeaderCell>
-                    <CTableDataCell colSpan={2}>Larry the Bird</CTableDataCell>
-                    <CTableDataCell>@twitter</CTableDataCell>
-                  </CTableRow>
-                </CTableBody>
-              </CTable>
+            <CTable className='text-center'>
+              <CTableHead>
+                <CTableRow>
+                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Create Date</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Update Date</CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                {
+                  categoryList?.category && categoryList?.category.map((category, index) => {
+                    return (
+                      <CTableRow key={index}>
+                        <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
+                        <CTableDataCell>{category.category_name}</CTableDataCell>
+                        <CTableDataCell>{MomentDate(category.createdAt)}</CTableDataCell>
+                        <CTableDataCell>{MomentDate(category.updatedAt)}</CTableDataCell>
+                      </CTableRow>
+                    )
+                  }
+                  )
+                }
+              </CTableBody>
+            </CTable>
           </CCardBody>
         </CCard>
       </CCol>

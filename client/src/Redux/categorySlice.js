@@ -3,7 +3,7 @@ import axios from 'axios';
 
 
 const initialState = {
-    category: []
+    categoryList: []
 };
 
 // Fetch category
@@ -13,14 +13,14 @@ export const viewCategory = createAsyncThunk('category/viewCategory', async () =
 });
 
 // Add category
-export const addCategory = createAsyncThunk('category/addCategory', async (newTodo) => {
-    const response = await axios.post(`${import.meta.env.VITE_API_URL}/category`, newTodo);
+export const addCategory = createAsyncThunk('category/addCategory', async (data) => {
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/category`, data);
     return response.data;
 });
 
 // Update category
-export const updateCategory = createAsyncThunk('category/updateCategory', async (updatedTodo) => {
-    const response = await axios.put(`${import.meta.env.VITE_API_URL}/category/${updatedTodo.id}`, updatedTodo);
+export const updateCategory = createAsyncThunk('category/updateCategory', async (data) => {
+    const response = await axios.put(`${import.meta.env.VITE_API_URL}/category/${data.id}`, data);
     return response.data;
 });
 
@@ -30,28 +30,28 @@ export const deleteCategory = createAsyncThunk('category/deleteCategory', async 
     return id;
 });
 
-const todoSlice = createSlice({
+const categorySlice = createSlice({
     name: 'category',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(addCategory.fulfilled, (state, action) => {
-                state.todos = action.payload;
+                state.categoryList = action.payload;
             })
             .addCase(viewCategory.fulfilled, (state, action) => {
-                state.todos.push(action.payload);
+                state.categoryList.push(action.payload);
             })
             .addCase(updateCategory.fulfilled, (state, action) => {
-                const index = state.todos.findIndex(todo => todo.id === action.payload.id);
+                const index = state.categoryList.findIndex(category => category.id === action.payload.id);
                 if (index !== -1) {
-                    state.todos[index] = action.payload;
+                    state.categoryList[index] = action.payload;
                 }
             })
             .addCase(deleteCategory.fulfilled, (state, action) => {
-                state.todos = state.todos.filter(todo => todo.id !== action.payload);
+                state.categoryList = state.categoryList.filter(category => category.id !== action.payload);
             });
     },
 });
 
-export default todoSlice.reducer;
+export default categorySlice.reducer;

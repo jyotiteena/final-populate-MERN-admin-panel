@@ -1,12 +1,16 @@
 import { CButton, CCard, CCardBody, CCardHeader, CCol, CForm, CFormInput, CFormLabel, CRow, } from '@coreui/react'
 import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux'
-import { addCategory } from '../../Redux/userSlice';
+import { fetchData } from '../../Redux/commonSlice';
+import { useNavigate } from 'react-router-dom';
+// import { addCategory } from '../../Redux/userSlice';
 const AddCategory = () => {
+    const redirect = useNavigate()
     const { register, handleSubmit, formState: { errors } } = useForm();
     const dispatch = useDispatch()
     function Add(data) {
-        dispatch(addCategory(data))
+        dispatch(fetchData({ model: 'category', method: 'POST', data: data }));
+        redirect('/category/view')
     }
     return (
         <>
