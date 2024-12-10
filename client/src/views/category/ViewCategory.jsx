@@ -1,32 +1,28 @@
 import { CButton, CCard, CCardBody, CCardHeader, CCol, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow, } from '@coreui/react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { viewCategory } from '../../Redux/categorySlice'
 import MomentDate from '../../utils/MomentDate'
 import { fetchData } from '../../Redux/commonSlice'
 import CIcon from '@coreui/icons-react'
-import { cilTrash } from '@coreui/icons'
+import { cilPencil, cilTrash } from '@coreui/icons'
 import swal from 'sweetalert';
 const ViewCategory = () => {
   const dispatch = useDispatch()
-
-
   useEffect(() => {
-    // dispatch(viewCategory())
     dispatch(fetchData({ model: 'category', method: 'GET' }));
   }, [dispatch])
   const categoryList = useSelector((state) => state?.common?.apiData?.category)
-
   function trash(id) {
-    dispatch(fetchData({ model: 'category', method: 'DELETE', id: id }))
-      .then(() => {
-        swal("Deleted successfully!", { icon: "success" });
-        // Fetch updated category list
-        dispatch(fetchData({ model: 'category', method: 'GET' }));
-      })
-      .catch((error) => {
-        swal("Failed to delete!", { icon: "error" });
-        console.error("Delete Error:", error);
+    swal({
+      title: "Are you sure Delete this item?",
+      icon: "warning",
+      buttons: true,
+    })
+      .then((willDelete) => {
+        if (willDelete) {
+          dispatch(fetchData({ model: 'category', method: 'DELETE', id: id }))
+          dispatch(fetchData({ model: 'category', method: 'GET' }));
+        }
       });
   }
 
@@ -50,14 +46,21 @@ const ViewCategory = () => {
               </CTableHead>
               <CTableBody>
                 {
-                  categoryList?.category && categoryList?.category.map((category, index) => {
+                  categoryList && categoryList[0]?.category.map((category, index) => {
                     return (
                       <CTableRow key={index}>
                         <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
                         <CTableDataCell>{category.category_name}</CTableDataCell>
                         <CTableDataCell>{MomentDate(category.createdAt)}</CTableDataCell>
                         <CTableDataCell>{MomentDate(category.updatedAt)}</CTableDataCell>
-                        <CTableDataCell><CButton onClick={() => trash(category._id)} className='btn btn-danger text-white'><CIcon icon={cilTrash} /></CButton></CTableDataCell>
+                        <CTableDataCell>
+                          <CButton onClick={() => trash(category._id)} className='btn btn-danger text-white'>
+                            <CIcon icon={cilTrash} />
+                          </CButton>
+                          <CButton onClick={() => update(category._id)} className='btn btn-warning mx-3'>
+                            <CIcon icon={cilPencil} />
+                          </CButton>
+                        </CTableDataCell>
                       </CTableRow>
                     )
                   }

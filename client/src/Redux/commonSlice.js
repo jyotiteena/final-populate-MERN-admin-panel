@@ -10,7 +10,7 @@ const initialState = {
 // Dynamic Async Thunk
 export const fetchData = createAsyncThunk('dynamic/fetchData', async ({ model, method, data, id }) => {
     const url = id ? `/${model}/${id}` : `/${model}`;
-    
+
     return await apiRequest({ method, url, data });
 });
 
@@ -26,14 +26,27 @@ const dynamicSlice = createSlice({
             })
             .addCase(fetchData.fulfilled, (state, action) => {
                 const { model, method, id } = action.meta.arg;
+                const result = action.payload;
+                if (!Array.isArray(state.apiData[model])) {
+                    state.apiData[model] = [];
+                }
+
                 if (method === 'GET' && !id) {
-                    state.apiData[model] = action.payload; // Fetch all
+                    state.apiData[model] = Array.isArray(result) ? result : [result];
                 } else if (method === 'GET' && id) {
-                    state.apiData[model] = state.apiData[model].map(item => item.id === id ? action.payload : item);
+                    const index = state.apiData[model].findIndex(item => item.id === id);
+                    if (index !== -1) {
+                        state.apiData[model][index] = result;
+                    } else {
+                        state.apiData[model].push(result);
+                    }
                 } else if (method === 'POST') {
-                    state.apiData[model] = [...(state.apiData[model] || []), action.payload];
+                    state.apiData[model].push(result);
                 } else if (method === 'PUT') {
-                    state.apiData[model] = state.apiData[model].map(item => item.id === id ? action.payload : item);
+                    const index = state.apiData[model].findIndex(item => item.id === id);
+                    if (index !== -1) {
+                        state.apiData[model][index] = result;
+                    }
                 } else if (method === 'DELETE') {
                     state.apiData[model] = state.apiData[model].filter(item => item.id !== id);
                 }

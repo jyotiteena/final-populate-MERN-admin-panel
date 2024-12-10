@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux'
 import { fetchData } from '../../Redux/commonSlice';
 import { useNavigate } from 'react-router-dom';
 import swal from 'sweetalert';
-// import { addCategory } from '../../Redux/userSlice';
 const AddCategory = () => {
     const redirect = useNavigate()
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
