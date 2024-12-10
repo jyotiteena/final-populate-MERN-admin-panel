@@ -3,14 +3,24 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux'
 import { fetchData } from '../../Redux/commonSlice';
 import { useNavigate } from 'react-router-dom';
+import swal from 'sweetalert';
 // import { addCategory } from '../../Redux/userSlice';
 const AddCategory = () => {
     const redirect = useNavigate()
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const dispatch = useDispatch()
-    function Add(data) {
-        dispatch(fetchData({ model: 'category', method: 'POST', data: data }));
-        redirect('/category/view')
+    async function Add(data) {
+        const res = await dispatch(fetchData({ model: 'category', method: 'POST', data: data }));
+        if (res?.payload?.error) {
+            swal({
+                title: res.payload.error,
+                icon: "error",
+                dangerMode: true,
+            })
+        } else {
+            swal(res.payload.message)
+            reset()
+        }
     }
     return (
         <>

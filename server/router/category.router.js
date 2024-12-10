@@ -7,4 +7,7 @@ router
     .post(categoryController.store)
     .get(categoryController.index)
 
+router.route('/:id')
+.delete(categoryController.trash)
+
 module.exports = router
