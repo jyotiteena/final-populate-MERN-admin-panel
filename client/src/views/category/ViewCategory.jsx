@@ -6,6 +6,7 @@ import { fetchData } from '../../Redux/commonSlice'
 import CIcon from '@coreui/icons-react'
 import { cilPencil, cilTrash } from '@coreui/icons'
 import swal from 'sweetalert';
+import { NavLink } from 'react-router-dom'
 const ViewCategory = () => {
   const dispatch = useDispatch()
   useEffect(() => {
@@ -57,9 +58,9 @@ const ViewCategory = () => {
                           <CButton onClick={() => trash(category._id)} className='btn btn-danger text-white'>
                             <CIcon icon={cilTrash} />
                           </CButton>
-                          <CButton onClick={() => update(category._id)} className='btn btn-warning mx-3'>
+                          <NavLink to={`/category/edit/${category._id}`} className='btn btn-warning mx-3'>
                             <CIcon icon={cilPencil} />
-                          </CButton>
+                          </NavLink>
                         </CTableDataCell>
                       </CTableRow>
                     )

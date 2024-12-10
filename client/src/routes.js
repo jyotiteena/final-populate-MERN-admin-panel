@@ -14,6 +14,7 @@ const routes = [
   { path: '/user/list', name: 'Colors', element: Colors },
   { path: '/user/payment', name: 'Typography', element: Typography },
   { path: '/category/add', name: 'Add', element: AddCategory },
+  { path: '/category/edit/:id', name: 'Update', element: AddCategory },
   { path: '/category/view', name: 'View', element: ViewCategory },
   { path: '/product/add', name: 'add category', element: AddCategory },
   { path: '/product/view', name: 'View', element: ViewCategory },

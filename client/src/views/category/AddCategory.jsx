@@ -1,33 +1,84 @@
-import { CButton, CCard, CCardBody, CCardHeader, CCol, CForm, CFormInput, CFormLabel, CRow, } from '@coreui/react'
+import {
+    CButton,
+    CCard,
+    CCardBody,
+    CCardHeader,
+    CCol,
+    CForm,
+    CFormInput,
+    CFormLabel,
+    CRow,
+} from '@coreui/react';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../Redux/commonSlice';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import swal from 'sweetalert';
+import { useEffect } from 'react';
+
 const AddCategory = () => {
-    const redirect = useNavigate()
-    const { register, handleSubmit, formState: { errors }, reset } = useForm();
-    const dispatch = useDispatch()
+    const { id } = useParams(); // Retrieve the category ID from the route if in edit mode
+    const redirect = useNavigate();
+    const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm();
+    const dispatch = useDispatch();
+
+    // Populate the form fields when editing
+
+    const categoryList = useSelector((state) => state?.common?.apiData?.category)
+    useEffect(() => {
+        dispatch(fetchData({ model: 'category', method: 'GET' }))
+        var filterData;
+        if (categoryList) {
+            console.log(categoryList[0].category)
+            filterData = categoryList[0].category.find((category) => {
+                return category._id === id
+            })
+            reset(filterData)
+        }
+    }, [dispatch])
+    // console.log("filterData......");
+    // console.log(filterData)
+    // useEffect(() => {
+    //     if (id) {
+    //         dispatch(fetchData({ model: 'category', method: 'GET' }))
+    //             .then((res) => {
+    //                 if (res?.payload) {
+    //                     setValue('category_name', res.payload.category_name);
+    //                 }
+    //             })
+    //             .catch(() => {
+    //                 swal({
+    //                     title: 'Error loading category',
+    //                     icon: 'error',
+    //                 });
+    //             });
+    //     }
+    // }, [id, dispatch, setValue]);
+
+    // Handle form submission
     async function Add(data) {
-        const res = await dispatch(fetchData({ model: 'category', method: 'POST', data: data }));
+        const apiMethod = id ? 'PUT' : 'POST'; // Use PUT for update, POST for new entry
+        const res = await dispatch(fetchData({ model: 'category', method: apiMethod, data, id }));
         if (res?.payload?.error) {
             swal({
                 title: res.payload.error,
-                icon: "error",
+                icon: 'error',
                 dangerMode: true,
-            })
+            });
         } else {
-            swal(res.payload.message)
-            reset()
+            swal(res.payload.message);
+            reset();
+            redirect('/view-category'); // Redirect to the category list after success
         }
     }
+
     return (
         <>
             <CRow>
                 <CCol xs={12}>
                     <CCard className="mb-4">
                         <CCardHeader className='bg-dark text-white'>
-                            <strong>Add Category</strong>
+                            <strong>{id ? 'Edit Category' : 'Add Category'}</strong>
                         </CCardHeader>
                         <CCardBody>
                             <CForm method="post" onSubmit={handleSubmit(Add)} >
@@ -40,20 +91,22 @@ const AddCategory = () => {
                                         {...register('category_name', {
                                             required: {
                                                 value: true,
-                                                message: "please Enter Category Name"
+                                                message: "Please enter category name"
                                             }
                                         })}
                                     />
                                     <p className='text-danger'>{errors?.category_name?.message}</p>
                                 </div>
-                                <CButton type='submit' className='btn btn-outline-success'>Submit</CButton>
+                                <CButton type='submit' className='btn btn-outline-success'>
+                                    {id ? 'Update' : 'Submit'}
+                                </CButton>
                             </CForm>
                         </CCardBody>
                     </CCard>
                 </CCol>
             </CRow>
         </>
-    )
+    );
 }
 
-export default AddCategory
+export default AddCategory;
