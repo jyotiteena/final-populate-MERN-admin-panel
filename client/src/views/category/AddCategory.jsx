@@ -36,39 +36,20 @@ const AddCategory = () => {
             reset(filterData)
         }
     }, [dispatch])
-    // console.log("filterData......");
-    // console.log(filterData)
-    // useEffect(() => {
-    //     if (id) {
-    //         dispatch(fetchData({ model: 'category', method: 'GET' }))
-    //             .then((res) => {
-    //                 if (res?.payload) {
-    //                     setValue('category_name', res.payload.category_name);
-    //                 }
-    //             })
-    //             .catch(() => {
-    //                 swal({
-    //                     title: 'Error loading category',
-    //                     icon: 'error',
-    //                 });
-    //             });
-    //     }
-    // }, [id, dispatch, setValue]);
 
-    // Handle form submission
     async function Add(data) {
         const apiMethod = id ? 'PUT' : 'POST'; // Use PUT for update, POST for new entry
         const res = await dispatch(fetchData({ model: 'category', method: apiMethod, data, id }));
         if (res?.payload?.error) {
             swal({
-                title: res.payload.error,
+                title: res.payload.error || "error",
                 icon: 'error',
                 dangerMode: true,
             });
         } else {
-            swal(res.payload.message);
+            await swal(res?.payload?.message || "Updated");
             reset();
-            redirect('/view-category'); // Redirect to the category list after success
+            redirect('/category/view'); // Redirect to the category list after success
         }
     }
 
