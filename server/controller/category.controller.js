@@ -8,7 +8,6 @@ exports.store = async (req, res, next) => {
             res.json({
                 error: "Category Already Exist"
             })
-
         } else {
             await Category.create({ category_name })
                 .then((category) => {
@@ -45,9 +44,26 @@ exports.index = async (_, res, next) => {
     }
 }
 
-exports.trash = (async(req,res)=>{
-    const category = await Category.deleteOne({_id:req.params.id})
-    if(category){
+exports.trash = async (req, res) => {
+    const category = await Category.deleteOne({ _id: req.params.id })
+    if (category) {
         res.json("deleted")
     }
-})
+}
+
+exports.update = async (req, res) => {
+    const { id } = req.params;
+    const { category_name } = req.body;
+    await Category.findOneAndUpdate({
+        _id: id,
+        category_name
+    }).then((category) => {
+        res.json({
+            success: true,
+            message: "category Update",
+            id: category._id
+        })
+    }).catch((error) => {
+        res.json(error)
+    })
+}

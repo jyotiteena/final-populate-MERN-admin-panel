@@ -8,6 +8,7 @@ router
     .get(categoryController.index)
 
 router.route('/:id')
-.delete(categoryController.trash)
+    .delete(categoryController.trash)
+    .put(categoryController.update)
 
 module.exports = router
