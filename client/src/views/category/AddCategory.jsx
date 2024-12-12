@@ -49,7 +49,7 @@ const AddCategory = () => {
         } else {
             await swal(res?.payload?.message || "Updated");
             reset();
-            redirect('/category/view'); // Redirect to the category list after success
+            redirect('/category/view');
         }
     }
 
