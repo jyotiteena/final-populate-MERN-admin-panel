@@ -22,7 +22,9 @@ const ViewCategory = () => {
       .then((willDelete) => {
         if (willDelete) {
           dispatch(fetchData({ model: 'category', method: 'DELETE', id: id }))
+          .then(() => {
           dispatch(fetchData({ model: 'category', method: 'GET' }));
+          })
         }
       });
   }

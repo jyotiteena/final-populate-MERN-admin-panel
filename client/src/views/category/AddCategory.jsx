@@ -1,13 +1,4 @@
-import {
-    CButton,
-    CCard,
-    CCardBody,
-    CCardHeader,
-    CCol,
-    CForm,
-    CFormInput,
-    CFormLabel,
-    CRow,
+import {CButton,CCard,CCardBody,CCardHeader,CCol,CForm,CFormInput,CFormLabel,CRow,
 } from '@coreui/react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,9 +8,11 @@ import swal from 'sweetalert';
 import { useEffect } from 'react';
 
 const AddCategory = () => {
-    const { id } = useParams(); // Retrieve the category ID from the route if in edit mode
+    const { id } = useParams(); 
+    console.log("id.........")
+    console.log(id)
     const redirect = useNavigate();
-    const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const dispatch = useDispatch();
 
     // Populate the form fields when editing
@@ -38,7 +31,7 @@ const AddCategory = () => {
     }, [dispatch])
 
     async function Add(data) {
-        const apiMethod = id ? 'PUT' : 'POST'; // Use PUT for update, POST for new entry
+        const apiMethod = id ? 'PUT' : 'POST';
         const res = await dispatch(fetchData({ model: 'category', method: apiMethod, data, id }));
         if (res?.payload?.error) {
             swal({

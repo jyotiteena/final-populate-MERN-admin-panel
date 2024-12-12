@@ -6,10 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../Redux/commonSlice';
 import { useEffect } from 'react';
 import swal from 'sweetalert';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, useParams } from 'react-router-dom';
 
 const AddProduct = () => {
+    const { id } = useParams()
+
     const redirect = useNavigate();
 
     const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm();
@@ -17,18 +18,30 @@ const AddProduct = () => {
 
 
     const categoryList = useSelector((state) => state?.common?.apiData?.category)
+    const productList = useSelector((state) => state?.common?.apiData?.product)
     useEffect(() => {
         dispatch(fetchData({ model: 'category', method: 'GET' }))
+        dispatch(fetchData({ model: 'product', method: 'GET' }))
+
+        if (productList && id) {
+            const filterData = productList[0]?.product?.find((product) => product._id === id);
+            if (filterData) {
+                reset(filterData);
+                console.log("filterData.category_id.............");
+                console.log(filterData?.category_id.category_name)
+                setValue('category_id', filterData?.category_id?._id);
+            }
+        }
     }, [dispatch])
-    let finalResult;
-    if (categoryList) {
-        finalResult = categoryList[0].category
-    }
+
+    ////// filter category data
+    const finalResult = categoryList ? categoryList[0]?.category : [];
 
     async function Add(data) {
-        const res = await dispatch(fetchData({ model: 'product', method: 'POST', data}));
-        console.log("res.........")
-        console.log(res)
+        console.log("data............");
+        console.log(data)
+        const apiMethod = id ? 'PUT' : 'POST';
+        const res = await dispatch(fetchData({ model: 'product', method: apiMethod, data }));
         if (res?.payload?.error) {
             swal({
                 title: res.payload.error,
@@ -38,7 +51,7 @@ const AddProduct = () => {
         } else {
             await swal(res?.payload?.message);
             reset();
-            redirect('/product/view'); // Redirect to the category list after success
+            redirect('/product/view');
         }
     }
     return (
@@ -47,9 +60,10 @@ const AddProduct = () => {
                 <CCol xs={12}>
                     <CCard className="mb-4">
                         <CCardHeader className='bg-dark text-white'>
-                            <strong>Add Category</strong></CCardHeader>
+                            <strong>{id ? 'Edit Product' : 'Add Product'}</strong>
+                        </CCardHeader>
                         <CCardBody>
-                            <CForm method="post"  onSubmit={handleSubmit(Add)}>
+                            <CForm method="post" onSubmit={handleSubmit(Add)}>
 
                                 <div className="mb-3">
                                     <CFormLabel htmlFor="category">Category Name</CFormLabel>
@@ -59,11 +73,11 @@ const AddProduct = () => {
                                             message: "please Select Category"
                                         }
                                     })}>
-                                        <option disabled selected value="">Choose Any One</option>
+                                        <option disabled value="">Choose Any One</option>
                                         {
                                             finalResult?.map((category) => {
                                                 return (
-                                                    <option value={category._id}>{category.category_name}</option>
+                                                    <option key={category._id} value={category._id}>{category.category_name}</option>
                                                 )
                                             })
                                         }
@@ -129,8 +143,7 @@ const AddProduct = () => {
 
                                 </div>
                                 <CButton type='submit' className='btn btn-outline-success'>
-                                    {/* {id ? 'Update' : 'Submit'} */}
-                                    submit
+                                    {id ? 'Update' : 'Submit'}
                                 </CButton>
                             </CForm>
                         </CCardBody>
