@@ -1,4 +1,5 @@
-import {CButton,CCard,CCardBody,CCardHeader,CCol,CForm,CFormInput,CFormLabel,CRow,
+import {
+    CButton, CCard, CCardBody, CCardHeader, CCol, CForm, CFormInput, CFormLabel, CRow,
 } from '@coreui/react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,7 +9,7 @@ import swal from 'sweetalert';
 import { useEffect } from 'react';
 
 const AddCategory = () => {
-    const { id } = useParams(); 
+    const { id } = useParams();
     console.log("id.........")
     console.log(id)
     const redirect = useNavigate();

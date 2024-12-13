@@ -58,7 +58,7 @@ const ViewProduct = () => {
                     return (
                       <CTableRow key={index}>
                         <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
-                        <CTableDataCell>{product.category_id.category_name}</CTableDataCell>
+                        <CTableDataCell>{product?.category_id?.category_name}</CTableDataCell>
                         <CTableDataCell>{product.p_name}</CTableDataCell>
                         <CTableDataCell>{product.p_price}</CTableDataCell>
                         <CTableDataCell>{product.p_qty}</CTableDataCell>

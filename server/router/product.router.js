@@ -7,8 +7,7 @@ router
     .post(productController.store)
     .get(productController.index)
 
-router
-    .route('/:id')
+router.route('/:id')
     .delete(productController.trash)
     .put(productController.update)
 

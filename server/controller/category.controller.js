@@ -56,6 +56,7 @@ exports.trash = async (req, res) => {
 }
 
 exports.update = async (req, res) => {
+    console.log("category............")
     try {
         const { id } = req.params;
         const { category_name } = req.body;

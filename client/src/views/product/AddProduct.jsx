@@ -41,7 +41,7 @@ const AddProduct = () => {
         console.log("data............");
         console.log(data)
         const apiMethod = id ? 'PUT' : 'POST';
-        const res = await dispatch(fetchData({ model: 'product', method: apiMethod, data }));
+        const res = await dispatch(fetchData({ model: 'product', method: apiMethod, data, id }));
         if (res?.payload?.error) {
             swal({
                 title: res.payload.error,
