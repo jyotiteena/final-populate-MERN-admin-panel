@@ -4,10 +4,11 @@ const cloudinary = require('cloudinary').v2;
 
 // Cloudinary configuration
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
+    cloud_name: "drzyewehz",
+    api_key: "125987267655216",
+    api_secret: "5OYzrc9Fes8e4iMHrTIxWf_Vfb0",
 });
+console.log("cloudinary...................")
 
 // Multer storage with Cloudinary
 const storage = new CloudinaryStorage({
