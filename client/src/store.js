@@ -1,13 +1,10 @@
 import { combineReducers } from 'redux';
-import categoryReducer from './Redux/categorySlice';
 import { configureStore } from '@reduxjs/toolkit';
 import commonReducer from './Redux/commonSlice'
-
 const initialState = {
   sidebarShow: true,
   theme: 'light',
 };
-
 const changeState = (state = initialState, { type, ...rest }) => {
   switch (type) {
     case 'set':
@@ -19,8 +16,8 @@ const changeState = (state = initialState, { type, ...rest }) => {
 
 // Combine reducers
 const rootReducer = combineReducers({
-  app: changeState, // Managing app-specific state
-  common: commonReducer, // Managing category-specific state
+  app: changeState, 
+  common: commonReducer, 
 });
 
 // Configure store with rootReducer

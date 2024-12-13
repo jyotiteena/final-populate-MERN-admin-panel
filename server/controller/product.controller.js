@@ -42,3 +42,34 @@ exports.index = async (_, res, next) => {
         res.json(error)
     }
 }
+
+exports.trash = async (req, res) => {
+    try {
+        const category = await Product.deleteOne({ _id: req.params.id })
+        if (category) {
+            res.json("Product Deleted")
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+exports.update = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { category_id, p_name, p_price, p_qty, p_desc } = req.body;
+        await Product.findOneAndUpdate(
+            { _id: id },
+            { category_id, p_name, p_price, p_qty, p_desc })
+            .then(() => {
+                res.json({
+                    success: true,
+                    message: "product Update",
+                })
+            }).catch((error) => {
+                res.json(error)
+            })
+    } catch (error) {
+        console.log(error)
+    }
+}

@@ -45,25 +45,33 @@ exports.index = async (_, res, next) => {
 }
 
 exports.trash = async (req, res) => {
-    const category = await Category.deleteOne({ _id: req.params.id })
-    if (category) {
-        res.json("deleted")
+    try {
+        const category = await Category.deleteOne({ _id: req.params.id })
+        if (category) {
+            res.json("category deleted")
+        }
+    } catch (error) {
+        console.log(error)
     }
 }
 
 exports.update = async (req, res) => {
-    const { id } = req.params;
-    const { category_name } = req.body;
-    await Category.findOneAndUpdate(
-        { _id: id },
-        {
-            category_name
-        }).then((category) => {
-            res.json({
-                success: true,
-                message: "category Update",
+    console.log("category............")
+    try {
+        const { id } = req.params;
+        const { category_name } = req.body;
+        await Category.findOneAndUpdate(
+            { _id: id },
+            { category_name })
+            .then(() => {
+                res.json({
+                    success: true,
+                    message: "category Update",
+                })
+            }).catch((error) => {
+                res.json(error)
             })
-        }).catch((error) => {
-            res.json(error)
-        })
+    } catch (error) {
+        console.log(error)
+    }
 }
