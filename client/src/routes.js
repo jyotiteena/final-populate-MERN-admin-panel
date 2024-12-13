@@ -29,12 +29,6 @@ const routes = [
   { path: '/product/add', name: 'Add', element: AddProduct },
   { path: '/product/view', name: 'View', element: ViewProduct },
   { path: '/product/edit/:id', name: 'Update', element: AddProduct },
-
-  //users
-  { path: '/user/add', name: 'Add', element: AddProduct },
-  { path: '/product/view', name: 'View', element: ViewProduct },
-  { path: '/product/edit/:id', name: 'Update', element: AddProduct },
-
 ]
 
 export default routes

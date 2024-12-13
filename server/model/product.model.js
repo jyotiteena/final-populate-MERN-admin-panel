@@ -19,6 +19,9 @@ const productSchema = new Schema({
     },
     p_desc: {
         ...Layout
+    },
+    p_image_url:{
+        ...Layout
     }
 }, TimeStamp);
 

@@ -4,12 +4,13 @@ exports.store = async (req, res, next) => {
     try {
         const { category_id, p_name, p_price, p_qty, p_desc } = req.body;
         const existCategory = await Product.find({ p_name: p_name }).countDocuments().exec()
+
         if (existCategory > 0) {
             res.json({
                 error: "Product Already Exist"
             })
         } else {
-            await Product.create({ category_id, p_name, p_price, p_qty, p_desc })
+            await Product.create({ category_id, p_name, p_price, p_qty, p_desc,p_image_url:req.file.path })
                 .then((product) => {
                     res.json({
                         success: true,

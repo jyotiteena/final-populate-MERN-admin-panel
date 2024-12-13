@@ -1,10 +1,11 @@
+const upload = require('../config/imageUpload');
 const productController = require('../controller/product.controller');
 
 const router = require('express').Router();
 
 router
     .route('/')
-    .post(productController.store)
+    .post(upload.single('p_image_url'),productController.store)
     .get(productController.index)
 
 router.route('/:id')

@@ -8,11 +8,23 @@ const initialState = {
 };
 
 // Dynamic Async Thunk
+// export const fetchData = createAsyncThunk('dynamic/fetchData', async ({ model, method, data, id }) => {
+//     const url = id ? `/${model}/${id}` : `/${model}`;
+
+//     return await apiRequest({ method, url, data });
+// });
+
 export const fetchData = createAsyncThunk('dynamic/fetchData', async ({ model, method, data, id }) => {
     const url = id ? `/${model}/${id}` : `/${model}`;
+    let config = {};
 
-    return await apiRequest({ method, url, data });
+    if (data instanceof FormData) {
+        config.headers = { 'Content-Type': 'multipart/form-data' };
+    }
+
+    return await apiRequest({ method, url, data, ...config });
 });
+
 
 const dynamicSlice = createSlice({
     name: 'dynamic',

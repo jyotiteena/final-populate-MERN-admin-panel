@@ -9,17 +9,19 @@ import swal from 'sweetalert';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const AddProduct = () => {
-    const { id } = useParams();
+    const { id } = useParams()
+
     const redirect = useNavigate();
+
     const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm();
     const dispatch = useDispatch();
 
-    const categoryList = useSelector((state) => state?.common?.apiData?.category);
-    const productList = useSelector((state) => state?.common?.apiData?.product);
 
+    const categoryList = useSelector((state) => state?.common?.apiData?.category)
+    const productList = useSelector((state) => state?.common?.apiData?.product)
     useEffect(() => {
-        dispatch(fetchData({ model: 'category', method: 'GET' }));
-        dispatch(fetchData({ model: 'product', method: 'GET' }));
+        dispatch(fetchData({ model: 'category', method: 'GET' }))
+        dispatch(fetchData({ model: 'product', method: 'GET' }))
 
         if (productList && id) {
             const filterData = productList[0]?.product?.find((product) => product._id === id);
@@ -28,30 +30,14 @@ const AddProduct = () => {
                 setValue('category_id', filterData?.category_id?._id);
             }
         }
-    }, [dispatch]);
+    }, [dispatch])
 
+    ////// filter category data
     const finalResult = categoryList ? categoryList[0]?.category : [];
 
     async function Add(data) {
-        const formData = new FormData();
-        formData.append('p_name', data.p_name);
-        formData.append('p_price', data.p_price);
-        formData.append('p_qty', data.p_qty);
-        formData.append('p_desc', data.p_desc);
-        formData.append('category_id', data.category_id);
-
-        if (data.p_image[0]) {
-            formData.append('p_image', data.p_image[0]); // Append the image file
-        }
-
         const apiMethod = id ? 'PUT' : 'POST';
-        const res = await dispatch(fetchData({
-            model: 'product',
-            method: apiMethod,
-            data: formData,
-            id
-        }));
-
+        const res = await dispatch(fetchData({ model: 'product', method: apiMethod, data, id }));
         if (res?.payload?.error) {
             swal({
                 title: res.payload.error,
@@ -64,7 +50,6 @@ const AddProduct = () => {
             redirect('/product/view');
         }
     }
-
     return (
         <>
             <CRow>
@@ -74,19 +59,24 @@ const AddProduct = () => {
                             <strong>{id ? 'Edit Product' : 'Add Product'}</strong>
                         </CCardHeader>
                         <CCardBody>
-                            <CForm method="post" onSubmit={handleSubmit(Add)} encType="multipart/form-data">
+                            <CForm method="post" onSubmit={handleSubmit(Add)}>
+
                                 <div className="mb-3">
                                     <CFormLabel htmlFor="category">Category Name</CFormLabel>
                                     <CFormSelect {...register('category_id', {
                                         required: {
                                             value: true,
-                                            message: "Please select a category"
+                                            message: "please Select Category"
                                         }
                                     })}>
                                         <option disabled value="">Choose Any One</option>
-                                        {finalResult?.map((category) => (
-                                            <option key={category._id} value={category._id}>{category.category_name}</option>
-                                        ))}
+                                        {
+                                            finalResult?.map((category) => {
+                                                return (
+                                                    <option key={category._id} value={category._id}>{category.category_name}</option>
+                                                )
+                                            })
+                                        }
                                     </CFormSelect>
                                     <p className='text-danger'>{errors?.category_id?.message}</p>
                                 </div>
@@ -99,7 +89,7 @@ const AddProduct = () => {
                                         {...register('p_name', {
                                             required: {
                                                 value: true,
-                                                message: "Please enter product name"
+                                                message: "Please Enter Product Name"
                                             }
                                         })}
                                     />
@@ -114,7 +104,7 @@ const AddProduct = () => {
                                         {...register('p_price', {
                                             required: {
                                                 value: true,
-                                                message: "Please enter product price"
+                                                message: "Please Enter Product Price"
                                             }
                                         })}
                                     />
@@ -125,11 +115,11 @@ const AddProduct = () => {
                                     <CFormInput
                                         type="number"
                                         id="qty"
-                                        placeholder="Enter Product Quantity"
+                                        placeholder="Enter Product QTY"
                                         {...register('p_qty', {
                                             required: {
                                                 value: true,
-                                                message: "Please enter product quantity"
+                                                message: "Please Enter Product Qty"
                                             }
                                         })}
                                     />
@@ -137,34 +127,18 @@ const AddProduct = () => {
                                 </div>
                                 <div className="mb-3">
                                     <CFormLabel htmlFor="desc">Product Description</CFormLabel>
-                                    <CFormTextarea
-                                        id="desc"
-                                        rows={3}
+                                    <CFormTextarea id="desc" rows={3}
                                         placeholder="Enter Product Description"
                                         {...register('p_desc', {
                                             required: {
                                                 value: true,
-                                                message: "Please enter product description"
+                                                message: "Please Enter Product Description"
                                             }
-                                        })}
-                                    ></CFormTextarea>
+                                        })}></CFormTextarea>
                                     <p className='text-danger'>{errors?.p_desc?.message}</p>
+
                                 </div>
-                                <div className="mb-3">
-                                    <CFormLabel htmlFor="image">Product Image</CFormLabel>
-                                    <CFormInput
-                                        type="file"
-                                        id="image"
-                                        {...register('p_image', {
-                                            required: {
-                                                value: !id, // Only required if adding a new product
-                                                message: "Please upload a product image"
-                                            }
-                                        })}
-                                    />
-                                    <p className='text-danger'>{errors?.p_image?.message}</p>
-                                </div>
-                                <CButton type="submit" className="btn btn-outline-success">
+                                <CButton type='submit' className='btn btn-outline-success'>
                                     {id ? 'Update' : 'Submit'}
                                 </CButton>
                             </CForm>

@@ -10,8 +10,6 @@ import { useEffect } from 'react';
 
 const AddCategory = () => {
     const { id } = useParams();
-    console.log("id.........")
-    console.log(id)
     const redirect = useNavigate();
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const dispatch = useDispatch();
@@ -23,7 +21,6 @@ const AddCategory = () => {
         dispatch(fetchData({ model: 'category', method: 'GET' }))
         var filterData;
         if (categoryList) {
-            console.log(categoryList[0].category)
             filterData = categoryList[0].category.find((category) => {
                 return category._id === id
             })
