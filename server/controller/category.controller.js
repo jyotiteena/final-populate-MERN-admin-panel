@@ -54,16 +54,16 @@ exports.trash = async (req, res) => {
 exports.update = async (req, res) => {
     const { id } = req.params;
     const { category_name } = req.body;
-    await Category.findOneAndUpdate({
-        _id: id,
-        category_name
-    }).then((category) => {
-        res.json({
-            success: true,
-            message: "category Update",
-            id: category._id
+    await Category.findOneAndUpdate(
+        { _id: id },
+        {
+            category_name
+        }).then((category) => {
+            res.json({
+                success: true,
+                message: "category Update",
+            })
+        }).catch((error) => {
+            res.json(error)
         })
-    }).catch((error) => {
-        res.json(error)
-    })
 }

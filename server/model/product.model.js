@@ -22,4 +22,4 @@ const productSchema = new Schema({
     }
 }, TimeStamp);
 
-exports.Product = model('Product',productSchema)
+exports.Product = model('Product', productSchema)
