@@ -9,6 +9,8 @@ const apiRequest = async ({ method, url, data = null, params = null }) => {
             data,
             params,
         });
+        console.log("response data")
+        console.log(response.data)
         return response.data;
     } catch (error) {
         console.error('API Error:', error);

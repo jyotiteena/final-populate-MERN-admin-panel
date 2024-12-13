@@ -37,7 +37,7 @@ const ViewProduct = () => {
           <CCardHeader className='bg-dark text-white'>
             <strong>View Product</strong>
           </CCardHeader>
-          <CCardBody>
+          <CCardBody className='table-responsive'>
             <CTable className='text-center'>
               <CTableHead>
                 <CTableRow>
@@ -47,6 +47,7 @@ const ViewProduct = () => {
                   <CTableHeaderCell scope="col">Product Price</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Product Qty</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Product desc</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Product image</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Create Date</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Update Date</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Action</CTableHeaderCell>
@@ -63,6 +64,7 @@ const ViewProduct = () => {
                         <CTableDataCell>{product.p_price}</CTableDataCell>
                         <CTableDataCell>{product.p_qty}</CTableDataCell>
                         <CTableDataCell>{product.p_desc}</CTableDataCell>
+                        <CTableDataCell><img src={product.p_image_url} alt="" width={100} height={100} /></CTableDataCell>
                         <CTableDataCell>{MomentDate(product.createdAt)}</CTableDataCell>
                         <CTableDataCell>{MomentDate(product.updatedAt)}</CTableDataCell>
                         <CTableDataCell>

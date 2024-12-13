@@ -39,12 +39,15 @@ const AddProduct = () => {
         formData.append('p_qty', data.p_qty);
         formData.append('p_desc', data.p_desc);
         formData.append('category_id', data.category_id);
-
+        console.log("data.p_image[0]................");
+        console.log(data.p_image[0])
         if (data.p_image[0]) {
-            formData.append('p_image', data.p_image[0]); // Append the image file
+            formData.append('p_image_url', data.p_image[0]); // Append the image file
         }
 
         const apiMethod = id ? 'PUT' : 'POST';
+        console.log("formData...........");
+        console.log(formData)
         const res = await dispatch(fetchData({
             model: 'product',
             method: apiMethod,
