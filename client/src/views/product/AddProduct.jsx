@@ -4,12 +4,13 @@ import {
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchData } from '../../Redux/commonSlice';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import swal from 'sweetalert';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const AddProduct = () => {
     const { id } = useParams();
+    const [productImg, setImage] = useState("")
     const redirect = useNavigate();
     const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm();
     const dispatch = useDispatch();
@@ -25,7 +26,10 @@ const AddProduct = () => {
             const filterData = productList[0]?.product?.find((product) => product._id === id);
             if (filterData) {
                 reset(filterData);
+                console.log("filterData?.p_image_url...............");
+                console.log(filterData?.p_image_url)
                 setValue('category_id', filterData?.category_id?._id);
+                setImage(filterData?.p_image_url);
             }
         }
     }, [dispatch]);
@@ -39,15 +43,12 @@ const AddProduct = () => {
         formData.append('p_qty', data.p_qty);
         formData.append('p_desc', data.p_desc);
         formData.append('category_id', data.category_id);
-        console.log("data.p_image[0]................");
-        console.log(data.p_image[0])
-        if (data.p_image[0]) {
-            formData.append('p_image_url', data.p_image[0]); // Append the image file
+        if (data.p_image_url[0]) {
+            formData.append('p_image_url', data.p_image_url[0]); // Append the image file
         }
 
         const apiMethod = id ? 'PUT' : 'POST';
-        console.log("formData...........");
-        console.log(formData)
+
         const res = await dispatch(fetchData({
             model: 'product',
             method: apiMethod,
@@ -158,18 +159,23 @@ const AddProduct = () => {
                                     <CFormInput
                                         type="file"
                                         id="image"
-                                        {...register('p_image', {
+                                        {...register('p_image_url', {
                                             required: {
                                                 value: !id, // Only required if adding a new product
                                                 message: "Please upload a product image"
                                             }
                                         })}
                                     />
-                                    <p className='text-danger'>{errors?.p_image?.message}</p>
+                                    <p className='text-danger'>{errors?.p_image_url?.message}</p>
                                 </div>
                                 <CButton type="submit" className="btn btn-outline-success">
                                     {id ? 'Update' : 'Submit'}
                                 </CButton>
+                                {
+                                    productImg && <div className="mt-4">
+                                        <img src={productImg} alt="" width={200} height={200} />
+                                    </div>
+                                }
                             </CForm>
                         </CCardBody>
                     </CCard>

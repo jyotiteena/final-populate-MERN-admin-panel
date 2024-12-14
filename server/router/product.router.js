@@ -5,12 +5,12 @@ const router = require('express').Router();
 
 router
     .route('/')
-    .post(upload.single('p_image_url'),productController.store)
+    .post(upload.single('p_image_url'), productController.store)
     .get(productController.index)
 
 router.route('/:id')
     .delete(productController.trash)
-    .put(productController.update)
+    .put(upload.single('p_image_url'), productController.update)
 
 
 module.exports = router

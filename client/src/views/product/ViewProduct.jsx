@@ -16,18 +16,18 @@ const ViewProduct = () => {
   const productList = useSelector((state) => state?.common?.apiData?.product)
   function trash(id) {
     swal({
-        title: "Are you sure Delete this item?",
-        icon: "warning",
-        buttons: true,
+      title: "Are you sure Delete this item?",
+      icon: "warning",
+      buttons: true,
     }).then((willDelete) => {
-        if (willDelete) {
-            dispatch(fetchData({ model: 'product', method: 'DELETE', id }))
-                .then(() => {
-                    dispatch(fetchData({ model: 'product', method: 'GET' }));
-                });
-        }
+      if (willDelete) {
+        dispatch(fetchData({ model: 'product', method: 'DELETE', id }))
+          .then(() => {
+            dispatch(fetchData({ model: 'product', method: 'GET' }));
+          });
+      }
     });
-}
+  }
 
 
   return (

@@ -1,5 +1,5 @@
 const { Product } = require("../model/product.model");
-
+const cloudinary = require('cloudinary').v2;
 exports.store = async (req, res, next) => {
     try {
         const { category_id, p_name, p_price, p_qty, p_desc } = req.body;
@@ -10,7 +10,7 @@ exports.store = async (req, res, next) => {
                 error: "Product Already Exist"
             })
         } else {
-            await Product.create({ category_id, p_name, p_price, p_qty, p_desc,p_image_url:req.file.path })
+            await Product.create({ category_id, p_name, p_price, p_qty, p_desc, p_image_url: req.file.path })
                 .then((product) => {
                     res.json({
                         success: true,
@@ -46,14 +46,35 @@ exports.index = async (_, res, next) => {
 
 exports.trash = async (req, res) => {
     try {
-        const category = await Product.deleteOne({ _id: req.params.id })
-        if (category) {
-            res.json("Product Deleted")
+        // Find product by ID
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
         }
+
+        // Extract Cloudinary public_id from the image URL
+        const imageUrl = product.p_image_url;
+        console.log(imageUrl)
+        const publicId = imageUrl.split('/').pop().split('.')[0]; // Extracts ID from the URL
+        console.log(publicId)
+
+        // Delete image from Cloudinary
+        await cloudinary.uploader.destroy(`products/${publicId}`, (error, result) => {
+            if (error) {
+                console.error('Cloudinary deletion error:', error);
+                return res.status(500).json({ message: 'Failed to delete image from Cloudinary' });
+            }
+        });
+
+        // Delete product from database
+        await Product.findByIdAndDelete(req.params.id);
+
+        return res.status(200).json({ message: 'Product and image deleted successfully' });
     } catch (error) {
-        console.log(error)
+        console.error(error);
+        return res.status(500).json({ message: 'Server error' });
     }
-}
+};
 
 exports.update = async (req, res) => {
     try {
@@ -61,7 +82,7 @@ exports.update = async (req, res) => {
         const { category_id, p_name, p_price, p_qty, p_desc } = req.body;
         await Product.findOneAndUpdate(
             { _id: id },
-            { category_id, p_name, p_price, p_qty, p_desc })
+            { category_id, p_name, p_price, p_qty, p_desc, p_image_url: req?.file?.path })
             .then(() => {
                 res.json({
                     success: true,
